@@ -22,24 +22,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(
-  new FacebookStrategy(
-    {
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "http://www.example.com/auth/facebook/callback",
-    },
-    function (accessToken, refreshToken, profile, done) {
-      User.findOrCreate(function (err, user) {
-        if (err) {
-          return done(err);
-        }
-        done(null, user);
-      });
-    }
-  )
-);
-
-passport.use(
   new passportLocal(function (username, password, done) {
     if (username === "t.carrillo2" && password === "12345")
       return done(null, { id: 1, name: "Cody" });
@@ -78,7 +60,7 @@ app.get("/login", (req, res) => {
 
 app.post(
   "/login",
-  passport.authenticate("passportFacebook", {
+  passport.authenticate("local", {
     //Recibir credenciales e iniciar sesión
     successRedirect: "/",
     failureRedirect: "/",
